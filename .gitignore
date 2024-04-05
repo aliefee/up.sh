@@ -1,0 +1,4 @@
+# ignored directories and files by git
+.vscode
+apps/
+apps.json

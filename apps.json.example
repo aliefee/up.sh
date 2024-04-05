@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "my-app",
+            "type": "python3-flask",
+            "port": 5000
+        }
+    ]
+}
