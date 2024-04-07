@@ -28,8 +28,6 @@ rm -f apps/.env_current
 function clean_up_and_exit {
     rm -f apps/$UPSH_APP_NAME/*.sh
     rm -f apps/.env_current
-    cd $UPSH_PATH/apps/$UPSH_APP_NAME
-    $CONTAINER_CLI down --rmi "local"
     exit 1
 }
 
@@ -93,7 +91,7 @@ echo "Container "$UPSH_APP_TYPE"_"$UPSH_APP_NAME" is up and running."
 
 while true; do
     printf "\e[1m\e[38;5;36mChoose:
-    1- $CONTAINER_CLI down
+    1- $CONTAINER_CLI down --volumes --rmi \"local\"
     2- $CONTAINER_CLI stop
     3- cd ./apps/$UPSH_APP_NAME/src
     4- $CONTAINER_CLI exec app /bin/bash
@@ -103,7 +101,7 @@ while true; do
     read -n 1 -r -s
 
     if [[ $REPLY =~ ^[1]$ ]]; then
-        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI down"
+        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI down --volumes --rmi \"local\""
         clean_up_and_exit
     elif [[ $REPLY =~ ^[2]$ ]]; then
         /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI stop"
