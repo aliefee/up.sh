@@ -2,14 +2,14 @@ import json
 import sys
 import os
 
-# get the real path
-UP_SH = os.path.dirname(__file__)
+# get the path to up.sh directory
+UP_SH_DIR = os.path.dirname(__file__)
 
 # take argument from stdin
 ARGUMENT_1 = sys.argv[1]
 
 # read apps config
-with open(f"{UP_SH}/apps.json", "r") as f:
+with open(f"{UP_SH_DIR}/apps.json", "r") as f:
     config = json.load(f)
 
 APPS = config["apps"]
@@ -26,7 +26,7 @@ def find_app(ARGUMENT_1):
 current_app = find_app(ARGUMENT_1)
 
 
-with open(f"{UP_SH}/apps/.env_current", "w") as file:
+with open(f"{UP_SH_DIR}/apps/.env_current", "w") as file:
     for key, value in current_app.items():
         if type(key) == str:
-            file.write(f"export APP_{key.upper()}={value}\n")
+            file.write(f"export UPSH_APP_{key.upper()}={value}\n")

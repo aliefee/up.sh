@@ -2,3 +2,4 @@
 .vscode
 apps/
 apps.json
+types/dev.*

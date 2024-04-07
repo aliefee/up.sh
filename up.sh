@@ -14,7 +14,7 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-UP_SH_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+UPSH_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # check if app name is given when running the script
 if [ -z "$1" ]; then
@@ -26,8 +26,10 @@ mkdir -p apps
 rm -f apps/.env_current
 
 function clean_up_and_exit {
-    rm -f apps/$APP_NAME/*.sh
-    #rm -f apps/.env_current
+    rm -f apps/$UPSH_APP_NAME/*.sh
+    rm -f apps/.env_current
+    cd $UPSH_PATH/apps/$UPSH_APP_NAME
+    $CONTAINER_CLI down --rmi "local"
     exit 1
 }
 
@@ -38,62 +40,62 @@ fi
 
 source apps/.env_current
 
-# check if apps/$APP_NAME exists
-if [ ! -d apps/$APP_NAME ]; then
-    mkdir apps/$APP_NAME
+# check if apps/$UPSH_APP_NAME exists
+if [ ! -d apps/$UPSH_APP_NAME ]; then
+    mkdir apps/$UPSH_APP_NAME
     if [ $? -ne 0 ]; then
-        echo "Error: mkdir apps/$APP_NAME failed"
+        echo "Error: mkdir apps/$UPSH_APP_NAME failed"
         clean_up_and_exit
     fi
-    echo "Created directory apps/$APP_NAME."
+    echo "Created directory apps/$UPSH_APP_NAME."
 fi
 
-# check if apps/$APP_NAME exists and is not empty
-if [ ! -d apps/$APP_NAME/src ]; then
-    mkdir apps/$APP_NAME/src
+# check if apps/$UPSH_APP_NAME exists and is not empty
+if [ ! -d apps/$UPSH_APP_NAME/src ]; then
+    mkdir apps/$UPSH_APP_NAME/src
     if [ $? -ne 0 ]; then
-        echo "Error: mkdir apps/$APP_NAME/src failed"
+        echo "Error: mkdir apps/$UPSH_APP_NAME/src failed"
         clean_up_and_exit
     fi
-    echo "Created directory apps/$APP_NAME/src."
-    printf "\e[1m\e[38;5;36mNow it is time to put your $APP_TYPE app files in:
-\e[38;5;35m $(pwd)/apps/$APP_NAME/src \e[0m\n"
+    echo "Created directory apps/$UPSH_APP_NAME/src."
+    printf "\e[1m\e[38;5;36mNow it is time to put your $UPSH_APP_TYPE app files in:
+\e[38;5;35m $(pwd)/apps/$UPSH_APP_NAME/src \e[0m\n"
     clean_up_and_exit
-elif [ -z "$(ls -A apps/$APP_NAME/src)" ]; then
+elif [ -z "$(ls -A apps/$UPSH_APP_NAME/src)" ]; then
     echo " src folder is empty."
-    printf "\e[1m\e[38;5;36mPlease put your $APP_TYPE app files in:
-\e[38;5;35m $(pwd)/apps/$APP_NAME/src \e[0m\n"
+    printf "\e[1m\e[38;5;36mPlease put your $UPSH_APP_TYPE app files in:
+\e[38;5;35m $(pwd)/apps/$UPSH_APP_NAME/src \e[0m\n"
     clean_up_and_exit
 fi
 
 # copy types
-cp types/$APP_TYPE/* apps/$APP_NAME
+cp types/$UPSH_APP_TYPE/* apps/$UPSH_APP_NAME
 
-/bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && ./create_compose_yml.sh"
+/bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && ./create_compose_yml.sh"
 if [ $? -ne 0 ]; then
     echo "Error: ./create_compose_yml.sh failed"
     clean_up_and_exit
 fi
 
-/bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && ./create_dockerfile.sh"
+/bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && ./create_dockerfile.sh"
 if [ $? -ne 0 ]; then
     echo "Error: ./create_dockerfile.sh failed"
     clean_up_and_exit
 fi
 
-/bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && $CONTAINER_CLI up -d"
+/bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI up -d"
 if [ $? -ne 0 ]; then
     echo "Error: docker-compose up -d failed"
     clean_up_and_exit
 fi
 
-echo "Container "$APP_TYPE"_"$APP_NAME" is up and running."
+echo "Container "$UPSH_APP_TYPE"_"$UPSH_APP_NAME" is up and running."
 
 while true; do
     printf "\e[1m\e[38;5;36mChoose:
     1- $CONTAINER_CLI down
     2- $CONTAINER_CLI stop
-    3- cd ./apps/$APP_NAME/src
+    3- cd ./apps/$UPSH_APP_NAME/src
     4- $CONTAINER_CLI exec app /bin/bash
     5- $CONTAINER_CLI exec -u 0 app /bin/bash$\e[0m\n
     6- Exit\n"
@@ -101,23 +103,23 @@ while true; do
     read -n 1 -r -s
 
     if [[ $REPLY =~ ^[1]$ ]]; then
-        /bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && $CONTAINER_CLI down"
+        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI down"
         clean_up_and_exit
     elif [[ $REPLY =~ ^[2]$ ]]; then
-        /bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && $CONTAINER_CLI stop"
+        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI stop"
         clean_up_and_exit
     elif [[ $REPLY =~ ^[3]$ ]]; then
-        cd $UP_SH_PATH/apps/$APP_NAME/src
+        cd $UPSH_PATH/apps/$UPSH_APP_NAME/src
         /bin/bash
     elif [[ $REPLY =~ ^[4]$ ]]; then
-        /bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && $CONTAINER_CLI exec app /bin/bash"
+        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI exec app /bin/bash"
     elif [[ $REPLY =~ ^[5]$ ]]; then
-        /bin/bash -c "cd $UP_SH_PATH/apps/$APP_NAME && $CONTAINER_CLI exec -u 0 app /bin/bash"
+        /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI exec -u 0 app /bin/bash"
     elif [[ $REPLY =~ ^[6]$ ]]; then
         clean_up_and_exit
     fi
 done
         
-cd $UP_SH_PATH
+cd $UPSH_PATH
 
 clean_up_and_exit
