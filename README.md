@@ -120,7 +120,7 @@ but don't want __up.sh__ to run `docker compose up -d` you can comment out
 After creating __Dockerfile__ and __compose.yml__ files, you can just take your app 
 folder to somewhere else and fly away from __up.sh__ project. This is another fair use of __up.sh__. 🙃  
 
-### you can run the script with your favourite container engine that supports Docker Compose.  
+### you can make the script run with your favourite container engine that supports Docker Compose.  
 just change the value of `CONTAINER_CLI` in up.sh
 ```bash:up.sh
 CONTAINER_CLI="docker compose"
