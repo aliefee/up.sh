@@ -9,17 +9,17 @@ printf "
 services:
   app:
     build: .
-    container_name: $APP_TYPE-$APP_NAME
+    container_name: $UPSH_APP_TYPE-$UPSH_APP_NAME
     tty: true
     volumes:
-      - ./src:/home/$USER/$APP_NAME
+      - $UPSH_APP_DIR:/home/$USER/$UPSH_APP_NAME
 " > compose.yml
 
-if [ -n "$APP_PORT" ]; then
+if [ -n "$UPSH_APP_PORT" ]; then
 
 printf "
     ports: 
-      - \"$APP_PORT:$APP_PORT\"
+      - \"$UPSH_APP_PORT:$UPSH_APP_PORT\"
 " >> compose.yml
 
 fi

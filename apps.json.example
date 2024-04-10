@@ -1,6 +1,7 @@
 {
     "apps": [
         {
+            "dir": "~/upsh-demo-app",
             "name": "my-app",
             "type": "python3-flask",
             "port": 5000

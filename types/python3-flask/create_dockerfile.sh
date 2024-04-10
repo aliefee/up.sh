@@ -24,9 +24,9 @@ COPY ./src/requirements.txt /tmp
 
 RUN pip3 install -r /tmp/requirements.txt
 
-WORKDIR /home/$USER/$APP_NAME
+WORKDIR /home/$USER/$UPSH_APP_NAME
 
-EXPOSE $APP_PORT
+EXPOSE $UPSH_APP_PORT
 
-ENTRYPOINT [\"python3\", \"-m\", \"flask\", \"run\", \"--host=0.0.0.0\", \"--port=$APP_PORT\", \"--debug\"]
+ENTRYPOINT [\"python3\", \"-m\", \"flask\", \"run\", \"--host=0.0.0.0\", \"--port=$UPSH_APP_PORT\", \"--debug\"]
 " > Dockerfile

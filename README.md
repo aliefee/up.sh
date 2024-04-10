@@ -31,48 +31,16 @@ You can find them under types directory, edit them or create your own types when
 You need to define your Apps in __apps.json__ file. This all you need to do to start using __up.sh__
 
 ## Example Usage
-#### 1- Create app.json file and define your apps as shown.
-```js:apps.json
-{
-    "my-app": {
-        "type": "python3-venv",
-        "name": "my-app", 
-        "port": 5000    
-    },
-    "app2": {
-        "type": "laravel",
-        "name": "app2",
-        "port": 8000
-    }
-}
-```
-> you may use apps.json.example as a template
+#### 1- Make your app directory ready
+Let's create an example flask app:
+
 ```bash
-cp apps.json.example apps.json
+mkdir ~/upsh-demo-app
 ```
 
-<br />
-
-#### 2- Run up.sh
 ```bash
-./up.sh my-app
-```
-the script will make directory `/apps/my-app/src`  and will ask you to put your app files in it  
-
-..| apps/  
-.........| my-app/  
-................ __src/__  
-
-> for example if you have a git repo, you could do
-```bash
-git clone <your-repo-url-here> ./apps/my-app/src
-``` 
-
-or  
-
-```bash
-# For this example we will create a simple python script
-cat << EOF > ./apps/my-app/src/app.py
+# For this example we will use 'python3-flask' type
+cat << EOF > ~/upsh-demo-app/app.py
 from flask import Flask
 
 app = Flask(__name__)
@@ -88,14 +56,34 @@ EOF
 
 ```bash
 # and a requirements.txt 
-cat << EOF > ./apps/my-app/src/requirements.txt
+cat << EOF > ~/upsh-demo-app/requirements.txt
 flask
 EOF
 ```
 
+#### 2- Config your app in the apps.json file
+
+you may use apps.json.example as a template
+```bash
+cp apps.json.example apps.json
+```
+
+```json:apps.json
+{
+    "apps": [
+        {
+            "dir": "~/upsh-demo-app",
+            "name": "my-app",
+            "type": "python3-flask",
+            "port": 5000
+        }
+    ]
+}
+```
+
 <br />
 
-#### 3- After putting your files in /apps/my-app/src, run the script again
+#### 3- Run the script
 ```bash
 ./up.sh my-app
 ```
@@ -105,7 +93,7 @@ And it will create Dockerfile and compose.yml inside /apps/my-app
 .........| my-app/  
 ................ __compose.yml__  
 ................ __Dockerfile__  
-................ src/  
+
 
 __up.sh__ will run `docker compose up -d` right after creating the Docker files.  
 
@@ -151,7 +139,7 @@ CONTAINER_CLI="nerdctl compose"
 !!! Using the scripts in this project for production deployment or testing would be extremely dangerous! Use only in your local machine.
 
 ## Contribution
-This project is not intended to transform into a project with many configuration and a UI
+This project is not intended to transform into another cli wrapper or a project with many configuration and a UI
 or whatsoever in the future.  
 
 I will try to keep scripts and the structure as intuitive and simple as possible
@@ -171,7 +159,7 @@ are gratefully welcomed.
 - [ ] tests
 
  +Personally I am a fan of podman's daemonless runtime and currently interested in 
- switching from compose to **_podman play kube_** for my local dev env. In the future, I may add that 
+ switching from compose to **_podman kube play_** for my local dev env. In the future, I may add that 
  functionality to up.sh or create a seperate script for that purpose.
 
 [Telegram group](https://t.me/updotsh)
