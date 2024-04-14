@@ -58,7 +58,7 @@ elif [ -z "$(ls -A $UPSH_APP_DIR)" ]; then
 fi
 
 # copy types
-cp types/$UPSH_APP_TYPE/* apps/$UPSH_APP_NAME
+cp types/$UPSH_APP_TYPE/*.sh apps/$UPSH_APP_NAME
 
 /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && ./create_compose_yml.sh"
 if [ $? -ne 0 ]; then
@@ -68,8 +68,7 @@ fi
 
 /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && ./create_dockerfile.sh"
 if [ $? -ne 0 ]; then
-    echo "Error: ./create_dockerfile.sh failed"
-    clean_up_and_exit
+    echo "Warning: ./create_dockerfile.sh failed"
 fi
 
 /bin/bash -c "cd $UPSH_PATH/apps/$UPSH_APP_NAME && $CONTAINER_CLI up -d"
