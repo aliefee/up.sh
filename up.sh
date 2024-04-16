@@ -10,7 +10,7 @@ fi
 CONTAINER_CLI="docker compose"
 
 # check if docker compose works
-docker compose version > /dev/null 2>&1
+$CONTAINER_CLI version > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     CONTAINER_CLI="docker-compose"
     docker-compose version > /dev/null 2>&1
@@ -53,8 +53,7 @@ if [ ! -d $UPSH_APP_DIR ]; then
     printf "\e[1m\e[38;5;36mapp directory does not exist! \e[38;5;35m$UPSH_APP_DIR\e[0m\n"
     clean_up_and_exit
 elif [ -z "$(ls -A $UPSH_APP_DIR)" ]; then
-    printf "\e[1m\e[38;5;36mapp directory has no files in it! \e[38;5;35m$UPSH_APP_DIR\e[0m\n"
-    clean_up_and_exit
+    printf "\e[1m\e[38;5;36mWARNING \e[38;5;35mempty app directory $UPSH_APP_DIR\e[0m\n"
 fi
 
 # copy types
