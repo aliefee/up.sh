@@ -19,14 +19,24 @@ RUN python3 -m venv /home/$USER/venv
 ENV VIRTUAL_ENV=/home/$USER/venv
 
 ENV PATH=\"\$VIRTUAL_ENV/bin:\$PATH\"
+" > Dockerfile
 
-COPY ./src/requirements.txt /tmp
+
+
+if [ -f $UPSH_APP_DIR/requirements.txt ]; then
+cp $UPSH_APP_DIR/requirements.txt ./requirements.txt
+
+printf "
+COPY ./requirements.txt /tmp
 
 RUN pip3 install -r /tmp/requirements.txt
+" >> Dockerfile
+fi
 
+printf "
 WORKDIR /home/$USER/$UPSH_APP_NAME
 
 EXPOSE $UPSH_APP_PORT
 
 ENTRYPOINT [\"python3\", \"-m\", \"flask\", \"run\", \"--host=0.0.0.0\", \"--port=$UPSH_APP_PORT\", \"--debug\"]
-" > Dockerfile
+" >> Dockerfile
